@@ -17,3 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// patientprism/patientprism-interview
+
+use App\Http\Controllers\CalcController\CalcController;
+
+Route::get('/calc/add/{a}/{b}', [CalcController::class, 'add']);
+Route::get('/calc/sub/{a}/{b}', [CalcController::class, 'sub']);
+Route::get('/calc/mul/{a}/{b}', [CalcController::class, 'mul']);
+Route::get('/calc/div/{a}/{b}', [CalcController::class, 'div']);
+Route::get('/calc/eval/{expr}', [CalcController::class, 'eval'])
+    ->where(['expr' => '.+']); // Accept any input for the expr parameter
