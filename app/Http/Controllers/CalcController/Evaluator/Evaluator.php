@@ -42,8 +42,6 @@ class Evaluator {
                     $args = array_splice($this->operator_stack, count($this->operator_stack) - $token->args, $token->args);
                     $this->operator_stack[] = NumberToken::from_mixed($token->evaluate($args));
                 }
-            } else if ($token instanceof CommaToken) {
-                // Ignore
             } else {
                 throw new EvaluatorException('Invalid token while evaluating ' . get_class($token), 400);
             }
