@@ -27,7 +27,10 @@ class Lexer {
         FactorialToken::SYMBOL => FactorialToken::class,
         ClosedParenthesisToken::SYMBOL => ClosedParenthesisToken::class,
         OpenParenthesisToken::SYMBOL => OpenParenthesisToken::class,
-        CommaToken::SYMBOL => CommaToken::class,
+        DivideToken::SYMBOL => DivideToken::class,
+
+        '÷' => DivideToken::class,
+        '⨯' => MultiplyToken::class,
     ];
 
     const RE_TOKEN = '/((?:-|\+)?(?:\d+)(?:\.(?:\d*))?(?:(?:E|e)(?:\+|-)(?:\d+))?)|(\w+)/SA'; // TODO split into two regexes
@@ -39,7 +42,7 @@ class Lexer {
 
         $offset = 0;
         while ($offset < strlen($expr)) {
-            $char = substr($expr, $offset, 1); // Extract the first character
+            $char = mb_substr($expr, $offset, 1); // Extract the first character
 
             // Ignore whitespace
             if (ctype_space($char)) {
@@ -53,7 +56,7 @@ class Lexer {
                 if ($operator !== null) {
                     // We've found an operator token!
                     $tokens[] = new $operator($char);
-                    $offset++;
+                    $offset += strlen($char);
                     continue;
                 }
             }
