@@ -1,7 +1,5 @@
 <?php
 
-// patientprism/patientprism-interview
-
 namespace App\Http\Controllers\CalcController;
 
 use App\Http\Controllers\Controller;
