@@ -40,15 +40,11 @@ class Lexer {
     public function lex(string $expr): array {
         $tokens = [];
 
+        $expr = preg_replace('/\s+/', '', $expr); // Remove all whitespace
+
         $offset = 0;
         while ($offset < strlen($expr)) {
             $char = mb_substr($expr, $offset, 1); // Extract the first character
-
-            // Ignore whitespace
-            if (ctype_space($char)) {
-                $offset++;
-                continue;
-            }
 
             // First, let's check if this character is one of our operators
             {
