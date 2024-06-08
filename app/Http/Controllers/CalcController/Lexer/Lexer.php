@@ -28,6 +28,7 @@ class Lexer {
         ClosedParenthesisToken::SYMBOL => ClosedParenthesisToken::class,
         OpenParenthesisToken::SYMBOL => OpenParenthesisToken::class,
         DivideToken::SYMBOL => DivideToken::class,
+        CommaToken::SYMBOL => CommaToken::class,
 
         '÷' => DivideToken::class,
         '⨯' => MultiplyToken::class,
