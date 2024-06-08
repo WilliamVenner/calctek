@@ -44,17 +44,19 @@ class Lexer {
 
         $offset = 0;
         while ($offset < strlen($expr)) {
-            $char = mb_substr($expr, $offset, 1); // Extract the first character
+            // Extract the first character
+            // Note that we use mb_substr(substr(...)) here:
+            // This is because preg_* functions will use byte offsets, not multibyte character offsets
+            // So, we substring the string to the current offset, and then use mb_substr to get the first character
+            $char = mb_substr(substr($expr, $offset), 0, 1);
 
             // First, let's check if this character is one of our operators
-            {
-                $operator = self::OPERATORS[$char] ?? null; // Get the class for this operator
-                if ($operator !== null) {
-                    // We've found an operator token!
-                    $tokens[] = new $operator($char);
-                    $offset += strlen($char);
-                    continue;
-                }
+            $operator = self::OPERATORS[$char] ?? null; // Get the class for this operator
+            if ($operator !== null) {
+                // We've found an operator token!
+                $tokens[] = new $operator($char);
+                $offset += strlen($char);
+                continue;
             }
 
             // Next, let's try to match either a number or a word
