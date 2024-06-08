@@ -10,10 +10,14 @@ class CalcController extends Controller
 {
     public function eval(string $expr)
     {
-        $tokens = (new Lexer)->lex($expr);
-        $evaluator = (new Parser($tokens))->infix_to_rpn($tokens);
-        $result = $evaluator->evaluate();
-        return response(strval($result), 200);
+        try {
+            $tokens = (new Lexer)->lex($expr);
+            $evaluator = (new Parser($tokens))->infix_to_rpn($tokens);
+            $result = $evaluator->evaluate();
+            return response(strval($result), 200);
+        } catch (CalcException $e) {
+            return response($e->getMessage(), $e->httpCode);
+        }
     }
 
     public function add($a, $b)
