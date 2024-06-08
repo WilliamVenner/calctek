@@ -10,6 +10,7 @@ use App\Http\Controllers\CalcController\Lexer\Token\NumberToken;
 use App\Http\Controllers\CalcController\Lexer\Token\OpenParenthesisToken;
 use App\Http\Controllers\CalcController\Lexer\Token\OpToken;
 use App\Http\Controllers\CalcController\Lexer\Token\ParenthesisToken;
+use App\Http\Controllers\CalcController\Lexer\Token\UnaryOpToken;
 use App\Http\Controllers\CalcController\Lexer\Token\WordToken;
 use App\Http\Controllers\CalcController\Parser\FunctionToken\FunctionToken;
 
@@ -30,7 +31,7 @@ class Parser {
                 $this->output_queue[] = $token;
             } else if ($token instanceof WordToken) {
                 $this->operator_stack[] = FunctionToken::from_name($token->value);
-            } else if ($token instanceof BinOpToken) {
+            } else if ($token instanceof OpToken) {
                 while ($operator = end($this->operator_stack)) {
                     if (!($operator instanceof OpenParenthesisToken) && ($operator->precedence > $token->precedence || ($token->precedence === $operator->precedence && $token->left_assoc))) {
                         $this->output_queue[] = array_pop($this->operator_stack);
@@ -40,7 +41,6 @@ class Parser {
                 }
                 $this->operator_stack[] = $token;
             } else if ($token instanceof CommaToken) {
-                // TODO assert(end($this->operator_stack) !== null);
                 while ($operator = end($this->operator_stack)) {
                     if (!($operator instanceof OpenParenthesisToken)) {
                         $this->output_queue[] = array_pop($this->operator_stack);
@@ -51,7 +51,6 @@ class Parser {
             } else if ($token instanceof OpenParenthesisToken) {
                 $this->operator_stack[] = $token;
             } else if ($token instanceof ClosedParenthesisToken) {
-                // TODO assert(end($this->operator_stack) !== null);
                 while ($operator = end($this->operator_stack)) {
                     if (!($operator instanceof OpenParenthesisToken)) {
                         if (!empty($this->operator_stack)) {

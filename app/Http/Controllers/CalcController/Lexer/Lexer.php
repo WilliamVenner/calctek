@@ -7,7 +7,7 @@ use App\Http\Controllers\CalcController\Lexer\Token\SubtractToken;
 use App\Http\Controllers\CalcController\Lexer\Token\MultiplyToken;
 use App\Http\Controllers\CalcController\Lexer\Token\DivideToken;
 use App\Http\Controllers\CalcController\Lexer\Token\PowerToken;
-use App\Http\Controllers\CalcController\Lexer\Token\ModuloToken;
+use App\Http\Controllers\CalcController\Lexer\Token\PercentToken;
 use App\Http\Controllers\CalcController\Lexer\Token\FactorialToken;
 use App\Http\Controllers\CalcController\Lexer\Token\OpenParenthesisToken;
 use App\Http\Controllers\CalcController\Lexer\Token\ClosedParenthesisToken;
@@ -23,7 +23,7 @@ class Lexer {
         MultiplyToken::SYMBOL => MultiplyToken::class,
         DivideToken::SYMBOL => DivideToken::class,
         PowerToken::SYMBOL => PowerToken::class,
-        ModuloToken::SYMBOL => ModuloToken::class,
+        PercentToken::SYMBOL => PercentToken::class,
         FactorialToken::SYMBOL => FactorialToken::class,
         ClosedParenthesisToken::SYMBOL => ClosedParenthesisToken::class,
         OpenParenthesisToken::SYMBOL => OpenParenthesisToken::class,
