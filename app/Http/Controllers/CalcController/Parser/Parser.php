@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\CalcController\Parser;
 
 use App\Http\Controllers\CalcController\Evaluator\Evaluator;
-use App\Http\Controllers\CalcController\Lexer\Token\BinOpToken;
 use App\Http\Controllers\CalcController\Lexer\Token\ClosedParenthesisToken;
 use App\Http\Controllers\CalcController\Lexer\Token\CommaToken;
 use App\Http\Controllers\CalcController\Lexer\Token\NumberToken;
 use App\Http\Controllers\CalcController\Lexer\Token\OpenParenthesisToken;
 use App\Http\Controllers\CalcController\Lexer\Token\OpToken;
 use App\Http\Controllers\CalcController\Lexer\Token\ParenthesisToken;
-use App\Http\Controllers\CalcController\Lexer\Token\UnaryOpToken;
 use App\Http\Controllers\CalcController\Lexer\Token\WordToken;
 use App\Http\Controllers\CalcController\Parser\FunctionToken\FunctionToken;
 
