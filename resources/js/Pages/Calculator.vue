@@ -156,11 +156,7 @@ function historyButtonClicked() {
 }
 
 // When an item in the history panel is clicked...
-let historyItemClickedCount = 0;
 function historyItemClicked(entry) {
-    // HACK! Trigger the ticker animation when a history item is clicked.
-    historyItemClickedCount++;
-
     // Set the input field value to the history item's output.
     calcTextHTMLInput.value.value = entry.output;
 
