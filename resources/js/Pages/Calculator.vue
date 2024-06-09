@@ -131,6 +131,15 @@ function inputFocusOut(e) {
     });
 }
 
+// When the user presses a key in the input field...
+function inputKeyUp(e) {
+    // If the ENTER key is pressed...
+    if (e.keyCode === 13) {
+        // "Click" the equals button
+        equalsButtonClicked(e);
+    }
+}
+
 // When the history button is clicked...
 function historyButtonClicked() {
     // Toggle the respective showHistory[...] state...
@@ -237,7 +246,7 @@ const calcTickerAnimationValue = computed(() => historyStack.value.slice(-1)[0]?
                         :key="historyStack.length">{{ calcTickerAnimationValue }}</div>
                 </Transition>
 
-                <input ref="calcTextHTMLInput" type="text" v-bind:autofocus="isDesktop" @blur="inputFocusOut"
+                <input ref="calcTextHTMLInput" type="text" v-bind:autofocus="isDesktop" @blur="inputFocusOut" @keyup="inputKeyUp"
                     class="flex-1 bg-transparent p-4 m-0 font-mono" />
             </div>
 
