@@ -4,10 +4,16 @@ import UserIcon from '@/Components/Icons/UserIcon.vue';
 import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
 import { computed, ref } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+
+const page = usePage();
 
 // Stack of historic calculations.
-const historyStack = ref([]);
+const historyStack = ref(page.props.calc_history.map(entry => ({
+    timestamp: new Date(entry.created_at),
+    input: entry.input_expression,
+    output: entry.output
+})));
 
 // #calc-input>input
 const calcTextHTMLInput = ref(null);
@@ -97,7 +103,7 @@ function equalsButtonClicked(e) {
 
     const timestamp = new Date();
 
-    axios.get('/api/calc/eval/' + encodeURIComponent(calcTextHTMLInput.value.value))
+    axios.get('/calc/eval/' + encodeURIComponent(calcTextHTMLInput.value.value))
         .then(response => {
             calcTextHTMLInput.value.parentElement.classList.remove('error');
 
@@ -113,12 +119,18 @@ function equalsButtonClicked(e) {
         .catch(error => {
             console.error(error);
 
-            calcTextHTMLInput.value.parentElement.classList.remove('error');
+            if (error.response.status === 500) {
+                alert('An internal server error occurred and has been logged. Please try again later.');
+            } else if (error.response.status === 503) {
+                alert('The calculator service is currently unavailable. Please try again later.');
+            } else {
+                calcTextHTMLInput.value.parentElement.classList.remove('error');
 
-            requestAnimationFrame(() => {
-                if (!calcTextHTMLInput.value) return;
-                calcTextHTMLInput.value.parentElement.classList.add('error');
-            });
+                requestAnimationFrame(() => {
+                    if (!calcTextHTMLInput.value) return;
+                    calcTextHTMLInput.value.parentElement.classList.add('error');
+                });
+            }
         });
 }
 
@@ -216,9 +228,9 @@ const calcTickerAnimationValue = computed(() => historyStack.value.slice(-1)[0]?
                                     {{ $page.props.auth.user.email }}</div>
 
                                 <div class="text-xs">
-                                    <Link :href="route('logout')" method="post" as="button">Log out</Link>
+                                    <Link :href="route('profile.edit')">My Account</Link>
                                     &middot;
-                                    <Link :href="route('profile.edit')">Settings</Link>
+                                    <Link :href="route('logout')" method="post" as="button">Log out</Link>
                                 </div>
                             </div>
                         </div>
