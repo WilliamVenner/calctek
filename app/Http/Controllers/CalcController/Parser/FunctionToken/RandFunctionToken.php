@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\CalcController\Parser\FunctionToken;
 
+use App\Http\Controllers\CalcController\Lexer\Token\FloatToken;
+
 class RandFunctionToken extends FunctionToken {
     public const NAME = 'rand';
 
@@ -12,10 +14,10 @@ class RandFunctionToken extends FunctionToken {
         $max = $args[1]->value;
         $rand = mt_rand() / mt_getrandmax();
         $n = $min + ($rand * ($max - $min));
-        if (is_float($min) || is_float($max)) {
+        if ($args[0] instanceof FloatToken || $args[1] instanceof FloatToken) {
             return $n;
         } else {
-            return (int)($n);
+            return (int)round($n);
         }
     }
 }

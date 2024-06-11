@@ -3,18 +3,16 @@
 namespace App\Http\Controllers\CalcController\Evaluator;
 
 use App\Http\Controllers\CalcController\Lexer\Token\BinOpToken;
-use App\Http\Controllers\CalcController\Lexer\Token\CommaToken;
 use App\Http\Controllers\CalcController\Lexer\Token\NumberToken;
 use App\Http\Controllers\CalcController\Lexer\Token\UnaryOpToken;
-use App\Http\Controllers\CalcController\Lexer\Token\WordToken;
 use App\Http\Controllers\CalcController\Parser\FunctionToken\FunctionToken;
 
 class Evaluator {
     private array $operator_stack;
     private array $output_queue;
 
-    public function __construct(array $operator_stack, array $output_queue) {
-        $this->operator_stack = $operator_stack;
+    public function __construct(array $output_queue) {
+        $this->operator_stack = [];
         $this->output_queue = $output_queue;
     }
 
@@ -25,14 +23,16 @@ class Evaluator {
             } else if ($token instanceof BinOpToken) {
                 $op2 = array_pop($this->operator_stack);
                 $op1 = array_pop($this->operator_stack);
+
                 if (!($op2 instanceof NumberToken) || !($op1 instanceof NumberToken)) {
-                    throw new EvaluatorException('Invalid operand while evaluating BinOpToken (' . ($op1 ? get_class($op1) : 'null') . ', ' . ($op2 ? get_class($op2) : 'null') . ')', 400);
+                    throw new EvaluatorException('Invalid operand while evaluating BinOpToken (' . ($op2 ? $op2->token_name() : 'null') . ', ' . ($op1 ? $op1->token_name() : 'null') . ')', 400);
                 }
+
                 $this->operator_stack[] = NumberToken::from_mixed($token->evaluate($op1, $op2));
             } else if ($token instanceof UnaryOpToken) {
                 $operand = array_pop($this->operator_stack);
                 if (!($operand instanceof NumberToken)) {
-                    throw new EvaluatorException('Invalid operand while evaluating UnaryOpToken', 400);
+                    throw new EvaluatorException('Invalid operand while evaluating UnaryOpToken (' . ($operand ? $operand->token_name() : 'null') . ')', 400);
                 }
                 $this->operator_stack[] = NumberToken::from_mixed($token->evaluate($operand));
             } else if ($token instanceof FunctionToken) {
@@ -43,7 +43,7 @@ class Evaluator {
                     $this->operator_stack[] = NumberToken::from_mixed($token->evaluate($args));
                 }
             } else {
-                throw new EvaluatorException('Invalid token while evaluating ' . get_class($token), 400);
+                throw new EvaluatorException('Invalid token encountered during evaluation (' . $token->token_name() . ')', 400);
             }
         }
 

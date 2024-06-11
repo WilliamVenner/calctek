@@ -2,6 +2,6 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
-abstract class BinOpToken extends OpToken {
-    public abstract function evaluate(NumberToken $left, NumberToken $right);
+interface BinOpToken extends OpToken {
+    public function evaluate(NumberToken $left, NumberToken $right);
 }

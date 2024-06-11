@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
-class PercentToken extends UnaryOpToken {
+class PercentToken extends SymbolToken implements PostfixUnaryOpToken {
+    use PostfixUnaryOperator;
+
     public const SYMBOL = '%';
 
     public function evaluate(NumberToken $operand) {

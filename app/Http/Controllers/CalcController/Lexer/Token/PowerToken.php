@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
-class PowerToken extends BinOpToken {
+class PowerToken extends SymbolToken implements BinOpToken {
     public const SYMBOL = '^';
-    public int $precedence = 4;
-    public bool $left_assoc = false;
+
+    public function precedence(): int {
+        return 4;
+    }
+
+    public function left_assoc(): bool {
+        return false;
+    }
 
     public function evaluate(NumberToken $left, NumberToken $right) {
         return $left->value ** $right->value;

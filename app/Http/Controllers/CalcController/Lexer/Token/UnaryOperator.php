@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
-class ParenthesisToken extends SymbolToken implements PrecedenceAware {
+trait UnaryOperator {
     public function precedence(): int {
-        return 0;
+        return 5;
     }
 
     public function left_assoc(): bool {
-        return false;
+        return true;
     }
 }

@@ -23,6 +23,8 @@ abstract class FunctionToken extends WordToken {
         EFunctionToken::NAME => EFunctionToken::class,
         ModFunctionToken::NAME => ModFunctionToken::class,
         ModuloFunctionToken::NAME => ModuloFunctionToken::class,
+        DegFunctionToken::NAME => DegFunctionToken::class,
+        RadFunctionToken::NAME => RadFunctionToken::class,
     ];
 
     public const NAME = '<undefined>';

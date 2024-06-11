@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\CalcController\Lexer;
 
-use App\Http\Controllers\CalcController\Lexer\Token\AddToken;
-use App\Http\Controllers\CalcController\Lexer\Token\SubtractToken;
 use App\Http\Controllers\CalcController\Lexer\Token\MultiplyToken;
 use App\Http\Controllers\CalcController\Lexer\Token\DivideToken;
 use App\Http\Controllers\CalcController\Lexer\Token\PowerToken;
@@ -15,11 +13,13 @@ use App\Http\Controllers\CalcController\Lexer\Token\IntegerToken;
 use App\Http\Controllers\CalcController\Lexer\Token\FloatToken;
 use App\Http\Controllers\CalcController\Lexer\Token\WordToken;
 use App\Http\Controllers\CalcController\Lexer\Token\CommaToken;
+use App\Http\Controllers\CalcController\Lexer\Token\MinusToken;
+use App\Http\Controllers\CalcController\Lexer\Token\PlusToken;
 
 class Lexer {
     const OPERATORS = [
-        AddToken::SYMBOL => AddToken::class,
-        SubtractToken::SYMBOL => SubtractToken::class,
+        PlusToken::SYMBOL => PlusToken::class,
+        MinusToken::SYMBOL => MinusToken::class,
         MultiplyToken::SYMBOL => MultiplyToken::class,
         DivideToken::SYMBOL => DivideToken::class,
         PowerToken::SYMBOL => PowerToken::class,
@@ -34,14 +34,13 @@ class Lexer {
         '⨯' => MultiplyToken::class,
     ];
 
-    const RE_TOKEN = '/((?:-|\+)?(?:\d+)(?:\.(?:\d*))?(?:(?:E|e)(?:\+|-)(?:\d+))?)|(\w+)/SA'; // TODO split into two regexes
+    //const RE_TOKEN = '/((?:-|\+)?(?:\d+)(?:\.(?:\d*))?(?:(?:E|e)(?:\+|-)?(?:\d+))?)|(\w+)/SA'; // TODO split into two regexes
+    const RE_TOKEN = '/((?:\d+)(?:\.(?:\d*))?(?:(?:E|e)(?:\+|-)?(?:\d+))?)|(\w+)/SA'; // TODO split into two regexes
     const RE_TOKEN_GROUP_NUMBER = 1;
     const RE_TOKEN_GROUP_WORD = 2;
 
     public function lex(string $expr): array {
         $tokens = [];
-
-        $expr = preg_replace('/\s+/', '', $expr); // Remove all whitespace
 
         $offset = 0;
         while ($offset < strlen($expr)) {
@@ -51,7 +50,13 @@ class Lexer {
             // So, we substring the string to the current offset, and then use mb_substr to get the first character
             $char = mb_substr(substr($expr, $offset), 0, 1);
 
-            // First, let's check if this character is one of our operators
+            if (ctype_space($char)) {
+                // Skip whitespace
+                $offset += strlen($char);
+                continue;
+            }
+
+            // Let's check if this character is one of our operators
             $operator = self::OPERATORS[$char] ?? null; // Get the class for this operator
             if ($operator !== null) {
                 // We've found an operator token!
@@ -60,7 +65,7 @@ class Lexer {
                 continue;
             }
 
-            // Next, let's try to match either a number or a word
+            // Let's try to match either a number or a word
             $matches = [];
             $result = preg_match(self::RE_TOKEN, $expr, $matches, 0, $offset);
             if ($result === false) {

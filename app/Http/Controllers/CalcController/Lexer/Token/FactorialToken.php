@@ -43,7 +43,9 @@ function gamma($z) {
     }
 }
 
-class FactorialToken extends UnaryOpToken {
+class FactorialToken extends SymbolToken implements PostfixUnaryOpToken {
+    use PostfixUnaryOperator;
+
     public const SYMBOL = '!';
 
     public function evaluate(NumberToken $operand) {
