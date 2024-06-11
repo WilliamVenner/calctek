@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use Tests\ExactTestCase;
 
+/**
+ * Basic tests for the CalcController endpoints.
+ */
 class CalcBasicTest extends ExactTestCase
 {
     public function test_calculator_view_can_be_rendered()

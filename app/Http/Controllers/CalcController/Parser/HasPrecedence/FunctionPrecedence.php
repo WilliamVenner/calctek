@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\CalcController\Parser\HasPrecedence;
 
+/**
+ * Function call precedence.
+ */
 trait FunctionPrecedence {
     public function precedence(): int
     {

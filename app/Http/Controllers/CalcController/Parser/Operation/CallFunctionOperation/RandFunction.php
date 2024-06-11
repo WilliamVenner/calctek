@@ -7,6 +7,9 @@ use App\Http\Controllers\CalcController\Evaluator\EvaluatorType\IntegerType;
 use App\Http\Controllers\CalcController\Evaluator\EvaluatorType\NumberType;
 use App\Http\Controllers\CalcController\Lexer\Token\FloatToken;
 
+/**
+ * Function that returns a random number between two numbers.
+ */
 class RandFunction extends CallFunctionOperation {
     public const NAME = 'rand';
 

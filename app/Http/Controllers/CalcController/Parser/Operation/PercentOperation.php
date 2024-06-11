@@ -7,6 +7,9 @@ use App\Http\Controllers\CalcController\Evaluator\EvaluatorType\NumberType;
 use App\Http\Controllers\CalcController\Parser\HasPrecedence\HasPrecedence;
 use App\Http\Controllers\CalcController\Parser\HasPrecedence\PostfixUnaryOperatorPrecedence;
 
+/**
+ * The operation of computing $operand / 100
+ */
 class PercentOperation extends Operation implements PostfixUnaryOperation, HasPrecedence {
     use PostfixUnaryOperatorPrecedence;
 

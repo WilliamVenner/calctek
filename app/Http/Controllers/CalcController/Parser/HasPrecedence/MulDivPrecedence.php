@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\CalcController\Parser\HasPrecedence;
 
+/**
+ * Multiply (*) and divide (/) operation precedence.
+ */
 trait MulDivPrecedence {
     public function precedence(): int
     {

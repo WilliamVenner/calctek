@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use Tests\ExactTestCase;
 
+/**
+ * Operator tests for the calculator evaluator (e.g. addition, subtraction, multiplication, division, exponentiation, factorial, percentage)
+ */
 class CalcEvalOperatorTest extends ExactTestCase
 {
     public function test_calculator_eval_can_add_integers() {

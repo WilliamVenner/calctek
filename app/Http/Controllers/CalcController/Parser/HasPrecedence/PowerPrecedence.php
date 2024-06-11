@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\CalcController\Parser\HasPrecedence;
 
+/**
+ * Precedence for the power operator.
+ */
 trait PowerPrecedence {
     public function precedence(): int
     {

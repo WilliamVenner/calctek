@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use Tests\ExactTestCase;
 
+/**
+ * Miscellaneous tests for the calculator's mathematical expression evaluator.
+ */
 class CalcEvalTest extends ExactTestCase
 {
     public function test_calculator_can_ignore_whitespace()

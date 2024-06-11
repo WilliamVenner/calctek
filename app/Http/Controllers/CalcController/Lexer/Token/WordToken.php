@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
+/**
+ * A sequence of characters that is not an operator or a number.
+ */
 class WordToken extends Token {
     public string $word;
 

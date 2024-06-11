@@ -4,6 +4,9 @@ namespace App\Http\Controllers\CalcController\Parser\Operation\CallFunctionOpera
 
 use App\Http\Controllers\CalcController\Evaluator\EvaluatorType\NumberType;
 
+/**
+ * Euler's number (e) function
+ */
 class EFunction extends CallFunctionOperation {
     public const NAME = 'e';
 

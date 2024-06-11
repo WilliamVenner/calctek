@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\CalcController\Parser\HasPrecedence;
 
+/**
+ * Add (+) and subtract (-) operation precedence.
+ */
 trait AddSubPrecedence {
     public function precedence(): int
     {

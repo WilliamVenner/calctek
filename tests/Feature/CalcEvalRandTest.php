@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use Tests\ExactTestCase;
 
+/**
+ * Tests for the rand() calculator function.
+ */
 class CalcEvalRandTest extends ExactTestCase
 {
     private const TIMEOUT = 5;

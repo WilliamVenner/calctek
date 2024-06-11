@@ -3,16 +3,18 @@
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
 use App\Http\Controllers\CalcController\Parser\Operation\AddOperation;
+use App\Http\Controllers\CalcController\Parser\Operation\BinaryOperation;
 use App\Http\Controllers\CalcController\Parser\Operation\PositiveOperation;
+use App\Http\Controllers\CalcController\Parser\Operation\UnaryOperation;
 
 class PlusToken extends Token implements PrefixUnaryOperatorToken, BinaryOperatorToken, PolyadicOperatorToken {
-    public function unary_operation_class(): string
+    public function as_unary_operation(): UnaryOperation
     {
-        return PositiveOperation::class;
+        return new PositiveOperation();
     }
 
-    public function binary_operation_class(): string
+    public function as_binary_operation(): BinaryOperation
     {
-        return AddOperation::class;
+        return new AddOperation();
     }
 }

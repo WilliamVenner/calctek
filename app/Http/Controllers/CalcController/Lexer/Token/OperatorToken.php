@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
+use App\Http\Controllers\CalcController\Parser\Operation\Operation;
+
 interface OperatorToken {
-    public function operation_class(): string;
+    public function as_operation(): Operation;
 }

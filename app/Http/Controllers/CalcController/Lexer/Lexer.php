@@ -16,11 +16,23 @@ use App\Http\Controllers\CalcController\Lexer\Token\MinusToken;
 use App\Http\Controllers\CalcController\Lexer\Token\MulToken;
 use App\Http\Controllers\CalcController\Lexer\Token\PlusToken;
 
+/**
+ * Lexes a mathematical expression into tokens.
+ */
 class Lexer {
-    const RE_TOKEN = '/((?:\d+)(?:\.(?:\d*))?(?:(?:E|e)(?:\+|-)?(?:\d+))?)|(\w+)/SA'; // TODO split into two regexes
+    /**
+     * Regular expression to match PHP numbers OR words (e.g. function identifiers)
+     */
+    const RE_TOKEN = '/((?:\d+)(?:\.(?:\d*))?(?:(?:E|e)(?:\+|-)?(?:\d+))?)|(\w+)/SA';
     const RE_TOKEN_GROUP_NUMBER = 1;
     const RE_TOKEN_GROUP_WORD = 2;
 
+    /**
+     * Lex the given expression into tokens.
+     *
+     * @param string $expr The expression to lex.
+     * @return array The tokens in the expression.
+     */
     public function lex(string $expr): array {
         $tokens = [];
 

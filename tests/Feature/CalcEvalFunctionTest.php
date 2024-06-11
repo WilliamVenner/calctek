@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use Tests\ExactTestCase;
 
+/**
+ * Tests for calculator function calls (e.g. sin() cos() tan() rand()).
+ */
 class CalcEvalFunctionTest extends ExactTestCase
 {
     public function test_calculator_eval_abs() {

@@ -5,6 +5,9 @@ namespace Tests\Feature;
 use App\Models\User;
 use Tests\ExactTestCase;
 
+/**
+ * Tests concerning the saving and retrieval of calculator history for logged in users.
+ */
 class CalcHistoryTest extends ExactTestCase
 {
     public function test_calculator_stores_and_retrieves_eval_history()
