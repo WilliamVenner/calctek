@@ -98,7 +98,7 @@ class CalcEvalOperatorTest extends ExactTestCase
         $response->assertStatus(200);
         $response->assertSeeTextExact('2');
 
-        $response = $this->get('/calc/eval/' . rawurlencode('6×3'));
+        $response = $this->get('/calc/eval/' . rawurlencode('6⨯3'));
         $response->assertStatus(200);
         $response->assertSeeTextExact('18');
     }

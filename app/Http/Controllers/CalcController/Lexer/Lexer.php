@@ -62,7 +62,7 @@ class Lexer {
                     break;
 
                 case '*':
-                case '×':
+                case '⨯':
                     $operator = new MulToken();
                     break;
 
