@@ -119,10 +119,10 @@ function equalsButtonClicked(e) {
         .catch(error => {
             console.error(error);
 
-            if (error.response.status === 500) {
+            if (!error.response || error.response.status === 503) {
+                alert('The calculator service is currently unavailable or you are offline. Please try again later.');
+            } else if (error.response.status === 500) {
                 alert('An internal server error occurred and has been logged. Please try again later.');
-            } else if (error.response.status === 503) {
-                alert('The calculator service is currently unavailable. Please try again later.');
             } else {
                 calcTextHTMLInput.value.parentElement.classList.remove('error');
 
