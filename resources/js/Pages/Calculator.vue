@@ -248,14 +248,14 @@ const calcTickerAnimationValue = computed(() => historyStack.value.slice(-1)[0]?
         <div class="flex flex-col overflow-auto flex-1">
             <!-- Input Text Field -->
             <div id="calc-input"
-                class="bg-[#303032] m-4 mb-0 rounded relative overflow-hidden shadow-[inset_0_0_2px_#000000b3]">
+                class="bg-[#303032] m-4 mb-0 rounded relative overflow-hidden shrink-0 shadow-[inset_0_0_2px_#000000b3]">
                 <Transition name="calc-input">
-                    <div class="calc-input-ticker w-full h-full flex-1 bg-transparent p-4 m-0 h-full font-mono absolute top-0 left-0 pointer-events-none"
+                    <div class="calc-input-ticker w-full h-full flex-1 bg-transparent p-4 m-0 h-full font-mono absolute top-0 left-0 pointer-events-none whitespace-nowrap"
                         :key="historyStack.length">{{ calcTickerAnimationValue }}</div>
                 </Transition>
 
                 <input ref="calcTextHTMLInput" type="text" v-bind:autofocus="isDesktop" @blur="inputFocusOut" @keyup="inputKeyUp"
-                    class="flex-1 w-full h-full bg-transparent p-4 m-0 font-mono" />
+                    class="flex-1 w-full h-full bg-transparent p-4 m-0 font-mono whitespace-nowrap" />
             </div>
 
             <!-- Calculator Buttons Grid -->
