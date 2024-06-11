@@ -167,4 +167,9 @@ class CalcEvalTest extends ExactTestCase
         $response = $this->get('/calc/eval/' . rawurlencode('!'));
         $response->assertStatus(400);
     }
+
+    public function test_calculator_rejects_unknown_function_calls() {
+        $response = $this->get('/calc/eval/' . rawurlencode('blah()'));
+        $response->assertStatus(400);
+    }
 }
