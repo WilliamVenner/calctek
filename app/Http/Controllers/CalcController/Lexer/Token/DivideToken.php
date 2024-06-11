@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
-class DivideToken extends SymbolToken implements BinOpToken {
-    public const SYMBOL = '/';
+use App\Http\Controllers\CalcController\Parser\Operation\DivideOperation;
 
-    public function precedence(): int {
-        return 3;
-    }
-
-    public function left_assoc(): bool {
-        return true;
-    }
-
-    public function evaluate(NumberToken $left, NumberToken $right) {
-        return $left->value / $right->value;
+class DivideToken extends Token implements BinaryOperatorToken, OperatorToken {
+    public function operation_class(): string
+    {
+        return DivideOperation::class;
     }
 }

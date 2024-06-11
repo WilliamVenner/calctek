@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers\CalcController\Parser;
 
+use App\Http\Controllers\CalcController\Parser\Operation\CallFunctionOperation\CallFunctionOperation;
 use App\Http\Controllers\CalcController\Evaluator\Evaluator;
-use App\Http\Controllers\CalcController\Lexer\Token\BinOpToken;
-use App\Http\Controllers\CalcController\Lexer\Token\ClosedParenthesisToken;
+use App\Http\Controllers\CalcController\Lexer\Token\BinaryOperatorToken;
+use App\Http\Controllers\CalcController\Lexer\Token\CloseParenthesisToken;
 use App\Http\Controllers\CalcController\Lexer\Token\CommaToken;
 use App\Http\Controllers\CalcController\Lexer\Token\NumberToken;
 use App\Http\Controllers\CalcController\Lexer\Token\OpenParenthesisToken;
-use App\Http\Controllers\CalcController\Lexer\Token\OpToken;
+use App\Http\Controllers\CalcController\Lexer\Token\OperatorToken;
 use App\Http\Controllers\CalcController\Lexer\Token\ParenthesisToken;
-use App\Http\Controllers\CalcController\Lexer\Token\PolyadicToken;
-use App\Http\Controllers\CalcController\Lexer\Token\PostfixUnaryOpToken;
+use App\Http\Controllers\CalcController\Lexer\Token\PolyadicOperatorToken;
+use App\Http\Controllers\CalcController\Lexer\Token\PostfixUnaryOperatorToken;
 use App\Http\Controllers\CalcController\Lexer\Token\Token;
-use App\Http\Controllers\CalcController\Lexer\Token\UnaryOpToken;
+use App\Http\Controllers\CalcController\Lexer\Token\UnaryOperatorToken;
 use App\Http\Controllers\CalcController\Lexer\Token\WordToken;
-use App\Http\Controllers\CalcController\Parser\FunctionToken\FunctionToken;
+use App\Http\Controllers\CalcController\Parser\HasPrecedence\HasPrecedence;
+use App\Http\Controllers\CalcController\Parser\Operation\PushNumberOperation;
+use App\Http\Controllers\CalcController\NamedCalcClass;
+use App\Http\Controllers\CalcController\Parser\Operation\Operation;
+use App\Http\Controllers\CalcController\Parser\Operation\PostfixUnaryOperation;
 
 class Parser
 {
@@ -35,8 +40,107 @@ class Parser
         $this->operator_stack = [];
 
         while ($token = &$this->pop_token()) {
-            if ($token instanceof PolyadicToken) {
-                if ($this->expect_prev_token([OpenParenthesisToken::class, BinOpToken::class, PolyadicToken::class, CommaToken::class], true)) {
+            if ($token instanceof NumberToken) {
+                if ($this->prev_token() instanceof NumberToken) {
+                    throw new ParserException('A number token cannot precede another number token', 400);
+                }
+
+                $this->output_queue[] = new PushNumberOperation($token->value);
+                continue;
+            } else if ($token instanceof WordToken) {
+                if (!($this->peek_token() instanceof OpenParenthesisToken)) {
+                    throw new ParserException('Encountered a function call with missing parentheses', 400);
+                }
+
+                $this->operator_stack[] = CallFunctionOperation::from_name($token->word);
+                continue;
+            } else if ($token instanceof CommaToken) {
+                while ($operator = end($this->operator_stack)) {
+                    if (!($operator instanceof OpenParenthesisToken)) {
+                        $this->output_queue[] = array_pop($this->operator_stack);
+                    } else {
+                        break;
+                    }
+                }
+                continue;
+            } else if ($token instanceof OpenParenthesisToken) {
+                $this->operator_stack[] = $token;
+                continue;
+            } else if ($token instanceof CloseParenthesisToken) {
+                while ($operator = end($this->operator_stack)) {
+                    if (!($operator instanceof OpenParenthesisToken)) {
+                        if (!empty($this->operator_stack)) {
+                            $this->output_queue[] = array_pop($this->operator_stack);
+                        } else {
+                            throw new ParserException('Mismatched parentheses', 400);
+                        }
+                    } else {
+                        break;
+                    }
+                }
+
+                $pop = array_pop($this->operator_stack);
+                assert($pop instanceof OpenParenthesisToken);
+
+                if ($func = end($this->operator_stack)) {
+                    if ($func instanceof CallFunctionOperation) {
+                        $this->output_queue[] = array_pop($this->operator_stack);
+                    }
+                }
+
+                // A closed parenthesis should always be followed by a comma or an operator
+                if (!$this->expect_next_token([CloseParenthesisToken::class, CommaToken::class, BinaryOperatorToken::class, PolyadicOperatorToken::class], true)) {
+                    throw new ParserException('Invalid token ' . ($this->peek_token()?->name() ?? 'null') . ' after a closed parenthesis', 400);
+                }
+
+                continue;
+            } else if ($token instanceof OperatorToken || $token instanceof PolyadicOperatorToken) {
+                $operation = null;
+                if ($token instanceof PolyadicOperatorToken) {
+                    if ($this->expect_prev_token([OpenParenthesisToken::class, BinaryOperatorToken::class, PolyadicOperatorToken::class, CommaToken::class], true)) {
+                        $operation = new ($token->unary_operation_class())();
+                    } else {
+                        $operation = new ($token->binary_operation_class())();
+                    }
+                } else if ($token instanceof OperatorToken) {
+                    $operation = new ($token->operation_class())();
+                } else {
+                    throw new ParserException('Unexpected token ' . $token->name() . ' (not an operator or polyadic operator)', 400);
+                }
+
+                assert($operation instanceof Operation);
+
+                if ($operation instanceof PostfixUnaryOperation) {
+                    if (empty($this->output_queue) || !$this->expect_prev_token([NumberToken::class, CloseParenthesisToken::class, UnaryOperatorToken::class])) {
+                        throw new ParserException('Invalid operand ' . ($this->prev_token()?->name() ?? 'null') . ' while evaluating ' . $operation->name(), 400);
+                    }
+                }
+
+                while ($operator = end($this->operator_stack)) {
+                    if (!($operator instanceof OpenParenthesisToken)) {
+                        if (!($operator instanceof HasPrecedence)) {
+                            throw new ParserException('Operator ' . $operator->name() . ' does not have precedence', 400);
+                        } else if (!($operation instanceof HasPrecedence)) {
+                            throw new ParserException('Operator ' . $operation->name() . ' does not have precedence', 400);
+                        } else if ($operator->precedence() > $operation->precedence() || ($operation->precedence() === $operator->precedence() && $operation->left_associative())) {
+                            $this->output_queue[] = array_pop($this->operator_stack);
+                            continue;
+                        }
+                    }
+
+                    break;
+                }
+
+                $this->operator_stack[] = $operation;
+                continue;
+            }
+
+            throw new ParserException('Unexpected token ' . $token->name(), 400);
+        }
+
+        /*while ($token = &$this->pop_token()) {
+            if ($token instanceof PolyadicOperatorToken) {
+                if ($this->expect_prev_token([OpenParenthesisToken::class, BinOpToken::class, PolyadicOperatorToken::class, CommaToken::class], true)) {
                     $token = $token->as_unary();
                 } else {
                     $token = $token->as_binary();
@@ -54,9 +158,8 @@ class Parser
                     throw new ParserException('Encountered a function call with missing parentheses', 400);
                 }
 
-                $this->operator_stack[] = FunctionToken::from_name($token->value);
+                $this->operator_stack[] = CallFunctionOperation::from_name($token->value);
             } else if ($token instanceof CommaToken) {
-                // TODO assert here
                 while ($operator = end($this->operator_stack)) {
                     if (!($operator instanceof OpenParenthesisToken)) {
                         $this->output_queue[] = array_pop($this->operator_stack);
@@ -66,8 +169,7 @@ class Parser
                 }
             } else if ($token instanceof OpenParenthesisToken) {
                 $this->operator_stack[] = $token;
-            } else if ($token instanceof ClosedParenthesisToken) {
-                // TODO assert here
+            } else if ($token instanceof CloseParenthesisToken) {
                 while ($operator = end($this->operator_stack)) {
                     if (!($operator instanceof OpenParenthesisToken)) {
                         if (!empty($this->operator_stack)) {
@@ -90,13 +192,13 @@ class Parser
                 }
 
                 // A closed parenthesis should always be followed by a comma or an operator
-                if (!$this->expect_next_token([ClosedParenthesisToken::class, CommaToken::class, BinOpToken::class, UnaryOpToken::class, PolyadicToken::class], true)) {
-                    throw new ParserException('Invalid token ' . ($this->peek_token()?->token_name() ?? 'null') . ' after a closed parenthesis', 400);
+                if (!$this->expect_next_token([CloseParenthesisToken::class, CommaToken::class, BinOpToken::class, UnaryOpToken::class, PolyadicOperatorToken::class], true)) {
+                    throw new ParserException('Invalid token ' . ($this->peek_token()?->name() ?? 'null') . ' after a closed parenthesis', 400);
                 }
             } else if ($token instanceof OpToken) {
                 if ($token instanceof PostfixUnaryOpToken) {
-                    if (empty($this->output_queue) || !$this->expect_prev_token([NumberToken::class, ClosedParenthesisToken::class, UnaryOpToken::class])) {
-                        throw new ParserException('Invalid operand ' . ($this->prev_token()?->token_name() ?? 'null') . ' while evaluating ' . $token->token_name(), 400);
+                    if (empty($this->output_queue) || !$this->expect_prev_token([NumberToken::class, CloseParenthesisToken::class, UnaryOpToken::class])) {
+                        throw new ParserException('Invalid operand ' . ($this->prev_token()?->name() ?? 'null') . ' while evaluating ' . $token->name(), 400);
                     }
                 }
 
@@ -109,11 +211,11 @@ class Parser
                 }
                 $this->operator_stack[] = $token;
             } else {
-                throw new ParserException('Unexpected token ' . $token->token_name(), 400);
+                throw new ParserException('Unexpected token ' . $token->name(), 400);
             }
 
             //var_dump([ "stack" => $this->operator_stack, "queue" => $this->output_queue ]);
-        }
+        }*/
 
         while ($operator = array_pop($this->operator_stack)) {
             if ($operator instanceof ParenthesisToken) {

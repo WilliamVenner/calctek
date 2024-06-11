@@ -31,11 +31,11 @@ class CalcEvalTest extends ExactTestCase
     {
         $response = $this->get('/calc/eval/' . rawurlencode('1+2+'));
         $response->assertStatus(400);
-        $response->assertSeeTextExact('Invalid operand while evaluating BinOpToken (IntegerToken, null)', false);
+        $response->assertSeeTextExact('Invalid operand while evaluating BinaryOperation (IntegerType, null)', false);
 
         $response = $this->get('/calc/eval/' . rawurlencode('1-2-'));
         $response->assertStatus(400);
-        $response->assertSeeTextExact('Invalid operand while evaluating BinOpToken (IntegerToken, null)', false);
+        $response->assertSeeTextExact('Invalid operand while evaluating BinaryOperation (IntegerType, null)', false);
     }
 
     public function test_calculator_rejects_postfix()
@@ -100,6 +100,9 @@ class CalcEvalTest extends ExactTestCase
 
     public function test_calculator_rejects_invalid_unary_op()
     {
+        $response = $this->get('/calc/eval/' . rawurlencode('!'));
+        $response->assertStatus(400);
+
         $response = $this->get('/calc/eval/' . rawurlencode('!5'));
         $response->assertStatus(400);
 

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
-class PercentToken extends SymbolToken implements PostfixUnaryOpToken {
-    use PostfixUnaryOperator;
+use App\Http\Controllers\CalcController\Parser\Operation\PercentOperation;
 
-    public const SYMBOL = '%';
-
-    public function evaluate(NumberToken $operand) {
-        return $operand->value / 100.0;
+class PercentToken extends Token implements PostfixUnaryOperatorToken, OperatorToken {
+    public function operation_class(): string
+    {
+        return PercentOperation::class;
     }
 }

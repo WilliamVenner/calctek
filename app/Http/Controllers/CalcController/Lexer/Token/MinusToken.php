@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
-class MinusToken extends SymbolToken implements PolyadicToken {
-    public const SYMBOL = '-';
+use App\Http\Controllers\CalcController\Parser\Operation\SubOperation;
+use App\Http\Controllers\CalcController\Parser\Operation\NegativeOperation;
 
-    public function as_unary(): UnaryOpToken {
-        return new NegativeToken();
+class MinusToken extends Token implements PrefixUnaryOperatorToken, BinaryOperatorToken, PolyadicOperatorToken {
+    public function unary_operation_class(): string
+    {
+        return NegativeOperation::class;
     }
 
-    public function as_binary(): BinOpToken {
-        return new SubtractToken();
+    public function binary_operation_class(): string
+    {
+        return SubOperation::class;
     }
 }

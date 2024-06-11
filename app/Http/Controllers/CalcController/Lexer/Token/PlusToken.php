@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
-class PlusToken extends SymbolToken implements PolyadicToken {
-    public const SYMBOL = '+';
+use App\Http\Controllers\CalcController\Parser\Operation\AddOperation;
+use App\Http\Controllers\CalcController\Parser\Operation\PositiveOperation;
 
-    public function as_unary(): UnaryOpToken {
-        return new PositiveToken();
+class PlusToken extends Token implements PrefixUnaryOperatorToken, BinaryOperatorToken, PolyadicOperatorToken {
+    public function unary_operation_class(): string
+    {
+        return PositiveOperation::class;
     }
 
-    public function as_binary(): BinOpToken {
-        return new AddToken();
+    public function binary_operation_class(): string
+    {
+        return AddOperation::class;
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\CalcController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CalcController\Lexer\Lexer;
 use App\Http\Controllers\CalcController\Parser\Parser;
-use App\Http\Middleware\OptionalAuthentication;
 use App\Models\CalcHistoryEntry;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

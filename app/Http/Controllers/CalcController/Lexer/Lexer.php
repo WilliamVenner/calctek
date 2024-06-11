@@ -2,39 +2,21 @@
 
 namespace App\Http\Controllers\CalcController\Lexer;
 
-use App\Http\Controllers\CalcController\Lexer\Token\MultiplyToken;
+use App\Http\Controllers\CalcController\Lexer\Token\CaretToken;
 use App\Http\Controllers\CalcController\Lexer\Token\DivideToken;
-use App\Http\Controllers\CalcController\Lexer\Token\PowerToken;
 use App\Http\Controllers\CalcController\Lexer\Token\PercentToken;
-use App\Http\Controllers\CalcController\Lexer\Token\FactorialToken;
 use App\Http\Controllers\CalcController\Lexer\Token\OpenParenthesisToken;
-use App\Http\Controllers\CalcController\Lexer\Token\ClosedParenthesisToken;
+use App\Http\Controllers\CalcController\Lexer\Token\CloseParenthesisToken;
 use App\Http\Controllers\CalcController\Lexer\Token\IntegerToken;
 use App\Http\Controllers\CalcController\Lexer\Token\FloatToken;
 use App\Http\Controllers\CalcController\Lexer\Token\WordToken;
 use App\Http\Controllers\CalcController\Lexer\Token\CommaToken;
+use App\Http\Controllers\CalcController\Lexer\Token\ExclamationToken;
 use App\Http\Controllers\CalcController\Lexer\Token\MinusToken;
+use App\Http\Controllers\CalcController\Lexer\Token\MulToken;
 use App\Http\Controllers\CalcController\Lexer\Token\PlusToken;
 
 class Lexer {
-    const OPERATORS = [
-        PlusToken::SYMBOL => PlusToken::class,
-        MinusToken::SYMBOL => MinusToken::class,
-        MultiplyToken::SYMBOL => MultiplyToken::class,
-        DivideToken::SYMBOL => DivideToken::class,
-        PowerToken::SYMBOL => PowerToken::class,
-        PercentToken::SYMBOL => PercentToken::class,
-        FactorialToken::SYMBOL => FactorialToken::class,
-        ClosedParenthesisToken::SYMBOL => ClosedParenthesisToken::class,
-        OpenParenthesisToken::SYMBOL => OpenParenthesisToken::class,
-        DivideToken::SYMBOL => DivideToken::class,
-        CommaToken::SYMBOL => CommaToken::class,
-
-        '÷' => DivideToken::class,
-        '⨯' => MultiplyToken::class,
-    ];
-
-    //const RE_TOKEN = '/((?:-|\+)?(?:\d+)(?:\.(?:\d*))?(?:(?:E|e)(?:\+|-)?(?:\d+))?)|(\w+)/SA'; // TODO split into two regexes
     const RE_TOKEN = '/((?:\d+)(?:\.(?:\d*))?(?:(?:E|e)(?:\+|-)?(?:\d+))?)|(\w+)/SA'; // TODO split into two regexes
     const RE_TOKEN_GROUP_NUMBER = 1;
     const RE_TOKEN_GROUP_WORD = 2;
@@ -57,10 +39,53 @@ class Lexer {
             }
 
             // Let's check if this character is one of our operators
-            $operator = self::OPERATORS[$char] ?? null; // Get the class for this operator
+            $operator = null;
+            switch ($char) {
+                case '+':
+                    $operator = new PlusToken();
+                    break;
+
+                case '-':
+                    $operator = new MinusToken();
+                    break;
+
+                case '*':
+                case '×':
+                    $operator = new MulToken();
+                    break;
+
+                case '/':
+                case '÷':
+                    $operator = new DivideToken();
+                    break;
+
+                case '^':
+                    $operator = new CaretToken();
+                    break;
+
+                case '%':
+                    $operator = new PercentToken();
+                    break;
+
+                case '!':
+                    $operator = new ExclamationToken();
+                    break;
+
+                case '(':
+                    $operator = new OpenParenthesisToken();
+                    break;
+
+                case ')':
+                    $operator = new CloseParenthesisToken();
+                    break;
+
+                case ',':
+                    $operator = new CommaToken();
+                    break;
+            }
             if ($operator !== null) {
                 // We've found an operator token!
-                $tokens[] = new $operator($char);
+                $tokens[] = $operator;
                 $offset += strlen($char);
                 continue;
             }

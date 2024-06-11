@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\CalcController\Lexer\Token;
 
-use ReflectionClass;
+use App\Http\Controllers\CalcController\NamedCalcClass;
 
 abstract class Token {
-    public function token_name(): string {
-        return (new ReflectionClass($this))->getShortName();
-    }
+    use NamedCalcClass;
 }
