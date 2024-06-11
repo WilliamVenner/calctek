@@ -172,4 +172,10 @@ class CalcEvalTest extends ExactTestCase
         $response = $this->get('/calc/eval/' . rawurlencode('blah()'));
         $response->assertStatus(400);
     }
+
+    public function test_calculator_function_calls_are_case_insensitive() {
+        $response = $this->get('/calc/eval/' . rawurlencode('MOD(5,2)'));
+        $response->assertStatus(200);
+        $response->assertSeeTextExact('1');
+    }
 }

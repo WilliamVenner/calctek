@@ -50,10 +50,11 @@ abstract class CallFunctionOperation implements HasPrecedence {
     /**
      * Look up the given function using its name, returning a CallFunctionOperation instance.
      *
-     * @param string $name The name of the function.
+     * @param string $name The name of the function (case-insensitive)
      * @return CallFunctionOperation The created CallFunctionOperation instance.
      */
     public static function from_name(string $name) {
+        $name = strtolower($name); // case-insensitive
         $funcClass = self::FUNCTIONS[$name] ?? null; // Get the class for this function
         if ($funcClass !== null) {
             return new $funcClass($name);
