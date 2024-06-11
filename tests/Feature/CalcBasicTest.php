@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\ExactTestCase;
 
-class CalcBasicTests extends ExactTestCase
+class CalcBasicTest extends ExactTestCase
 {
     public function test_calculator_view_can_be_rendered()
     {

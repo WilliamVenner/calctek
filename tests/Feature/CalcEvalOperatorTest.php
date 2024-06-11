@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\ExactTestCase;
 
-class CalcEvalOperatorTests extends ExactTestCase
+class CalcEvalOperatorTest extends ExactTestCase
 {
     public function test_calculator_eval_can_add_integers() {
         $response = $this->get('/calc/eval/' . rawurlencode('1+2'));
