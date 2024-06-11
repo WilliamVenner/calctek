@@ -206,36 +206,36 @@ const calcTickerAnimationValue = computed(() => historyStack.value.slice(-1)[0]?
                 </Transition>
 
                 <input ref="calcTextHTMLInput" type="text" v-bind:autofocus="isDesktop" @blur="inputFocusOut" @keyup="inputKeyUp"
-                    class="flex-1 w-full h-full bg-transparent p-4 m-0 font-mono whitespace-nowrap" />
+                    class="flex-1 w-full h-full bg-transparent p-4 m-0 font-mono whitespace-nowrap" id="calc-input-field" />
             </div>
 
             <!-- Calculator Buttons Grid -->
             <div id="calc-buttons" class="grid grid-cols-4 flex-1 p-4 gap-4" @click="calcButtonClicked">
-                <div class="operation col-span-2" @click="historyButtonClicked">
+                <div class="operation col-span-2" @click="historyButtonClicked" id="calc-btn-history">
                     <HistoryIcon class="w-[1.25em] h-auto" />
                 </div>
-                <div class="operation" @click="clearButtonClicked">CLR</div>
-                <div class="operation" @click="backspaceButtonClicked">&#9003;</div>
-                <div>(</div>
-                <div>)</div>
-                <div>%</div>
-                <div data-value="^">x<sup>y</sup></div>
-                <div>7</div>
-                <div>8</div>
-                <div>9</div>
-                <div class="operator">&div;</div>
-                <div>4</div>
-                <div>5</div>
-                <div>6</div>
-                <div class="operator">&Cross;</div>
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-                <div class="operator" data-value="-">&minus;</div>
-                <div>0</div>
-                <div data-value=".">&middot;</div>
-                <div class="operation" @click="equalsButtonClicked">&equals;</div>
-                <div class="operator">&plus;</div>
+                <div class="operation" @click="clearButtonClicked" id="calc-btn-clear">CLR</div>
+                <div class="operation" @click="backspaceButtonClicked" id="calc-btn-backsp">&#9003;</div>
+                <div id="calc-btn-open-p">(</div>
+                <div id="calc-btn-close-p">)</div>
+                <div id="calc-btn-percent">%</div>
+                <div data-value="^" id="calc-btn-pow">x<sup>y</sup></div>
+                <div id="calc-btn-7">7</div>
+                <div id="calc-btn-8">8</div>
+                <div id="calc-btn-9">9</div>
+                <div class="operator" id="calc-btn-div">&div;</div>
+                <div id="calc-btn-4">4</div>
+                <div id="calc-btn-5">5</div>
+                <div id="calc-btn-6">6</div>
+                <div class="operator" id="calc-btn-mul">&Cross;</div>
+                <div id="calc-btn-1">1</div>
+                <div id="calc-btn-2">2</div>
+                <div id="calc-btn-3">3</div>
+                <div class="operator" data-value="-" id="calc-btn-minus">&minus;</div>
+                <div id="calc-btn-0">0</div>
+                <div data-value="." id="calc-btn-decimal">&middot;</div>
+                <div class="operation" @click="equalsButtonClicked" id="calc-btn-equals">&equals;</div>
+                <div class="operator" id="calc-btn-plus">&plus;</div>
             </div>
         </div>
     </div>

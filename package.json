@@ -1,8 +1,11 @@
 {
     "private": true,
     "scripts": {
-        "dev": "vite",
-        "build": "vite build"
+        "dev": "php artisan serve & vite",
+        "build": "vite build",
+        "test": "npm run test:backend && npm run test:frontend",
+        "test:backend": "vite build && php artisan test",
+        "test:frontend": "start-server-and-test 'php artisan serve --no-interaction --port 8000 --host 127.0.0.1' 8000 'cypress run'"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",
@@ -10,9 +13,11 @@
         "@vitejs/plugin-vue": "^4.0.0",
         "autoprefixer": "^10.4.12",
         "axios": "^1.1.2",
+        "cypress": "^13.11.0",
         "laravel-vite-plugin": "^0.7.2",
         "lodash": "^4.17.19",
         "postcss": "^8.4.18",
+        "start-server-and-test": "^2.0.4",
         "tailwindcss": "^3.2.1",
         "vite": "^4.0.0",
         "vue": "^3.2.41"
