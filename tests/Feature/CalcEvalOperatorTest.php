@@ -93,6 +93,16 @@ class CalcEvalOperatorTest extends ExactTestCase
         $response->assertTextStartsWith('0.055');
     }
 
+    public function test_calculator_eval_alternative_operator_tokens() {
+        $response = $this->get('/calc/eval/' . rawurlencode('6÷3'));
+        $response->assertStatus(200);
+        $response->assertSeeTextExact('2');
+
+        $response = $this->get('/calc/eval/' . rawurlencode('6×3'));
+        $response->assertStatus(200);
+        $response->assertSeeTextExact('18');
+    }
+
     public function test_calculator_eval_can_handle_sole_negative_number() {
         $response = $this->get('/calc/eval/' . rawurlencode('-5'));
         $response->assertStatus(200);
