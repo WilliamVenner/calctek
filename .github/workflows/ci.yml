@@ -23,5 +23,8 @@ jobs:
       - name: Install composer dependencies
         run: composer install
 
+      - name: Active CI .env
+        run: mv .env.ci .env
+
       - name: Run tests
         run: npm run test
