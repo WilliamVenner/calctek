@@ -26,5 +26,8 @@ jobs:
       - name: Active CI .env
         run: mv .env.ci .env
 
+      - name: Setup database
+        run: php artisan migrate --seed --no-interaction --force
+
       - name: Run tests
         run: npm run test
