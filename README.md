@@ -38,3 +38,10 @@ npm run test
 
 ## Media
 
+### General Usage
+
+https://github.com/WilliamVenner/calctek/assets/14863743/d48586ea-3687-40d3-82dc-56b3b83a382b
+
+### Responsiveness
+
+https://github.com/WilliamVenner/calctek/assets/14863743/c57186bb-d911-4dcc-b50e-31fc452bbf0a
