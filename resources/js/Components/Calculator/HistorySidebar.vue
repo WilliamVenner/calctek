@@ -13,17 +13,18 @@ const props = defineProps([
 <template>
     <!-- History Sidebar -->
     <div class="portrait:fixed z-30 shadow-[0_0_12px_#000] max-w-full h-full bg-[#141519] w-64 overflow-auto flex flex-col portrait:transition-transform"
-        :class="{ 'landscape:hidden': !props.showHistoryLandscape, 'portrait:translate-x-[-100%]': !props.showHistoryPortrait }">
+        :class="{ 'landscape:hidden': !props.showHistoryLandscape, 'portrait:translate-x-[-100%]': !props.showHistoryPortrait }"
+        id="calc-history-sidebar">
 
         <div class="flex-1 flex flex-col">
             <div class="text-center sticky top-0 bg-gradient-to-b from-[#141519] to-transparent p-4">History</div>
 
             <!-- History entries -->
-            <div class="flex flex-1 flex-col-reverse justify-end break-all">
+            <div class="flex flex-1 flex-col-reverse justify-end break-all" id="calc-history-entries">
                 <div v-for="entry in props.historyStack" @click="props.historyItemClick(entry)"
                     class="p-2 pl-4 pr-4 rounded shadow bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-950 transition-colors cursor-pointer m-4 mb-4 first:mb-0 mt-0 font-mono text-sm">
-                    <div>{{ entry.output }}</div>
-                    <div class="text-xs text-zinc-500">{{ entry.input }}</div>
+                    <div class="calc-history-entry-output">{{ entry.output }}</div>
+                    <div class="calc-history-entry-input text-xs text-zinc-500">{{ entry.input }}</div>
                 </div>
             </div>
 
@@ -44,8 +45,7 @@ const props = defineProps([
                             <div class="font-bold overflow-hidden whitespace-nowrap overflow-ellipsis">{{
                                 $page.props.auth.user.name }}</div>
 
-                            <div
-                                class="text-xs text-zinc-400 mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                            <div class="text-xs text-zinc-400 mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
                                 {{ $page.props.auth.user.email }}</div>
 
                             <div class="text-xs">

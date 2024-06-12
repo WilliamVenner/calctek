@@ -189,12 +189,8 @@ const calcTickerAnimationValue = computed(() => historyStack.value.slice(-1)[0]?
     <Head title="Calculator" />
 
     <div class="w-screen h-screen bg-zinc-950 text-zinc-50 flex">
-        <HistorySidebar
-            :historyItemClick="historyItemClicked"
-            :showHistoryLandscape="showHistoryLandscape"
-            :historyStack="historyStack"
-            v-model:showHistoryPortrait="showHistoryPortrait"
-        />
+        <HistorySidebar :historyItemClick="historyItemClicked" :showHistoryLandscape="showHistoryLandscape"
+            :historyStack="historyStack" v-model:showHistoryPortrait="showHistoryPortrait" />
 
         <div class="flex flex-col overflow-auto flex-1">
             <!-- Input Text Field -->
@@ -205,8 +201,9 @@ const calcTickerAnimationValue = computed(() => historyStack.value.slice(-1)[0]?
                         :key="historyStack.length">{{ calcTickerAnimationValue }}</div>
                 </Transition>
 
-                <input ref="calcTextHTMLInput" type="text" v-bind:autofocus="isDesktop" @blur="inputFocusOut" @keyup="inputKeyUp"
-                    class="flex-1 w-full h-full bg-transparent p-4 m-0 font-mono whitespace-nowrap" id="calc-input-field" />
+                <input ref="calcTextHTMLInput" type="text" v-bind:autofocus="isDesktop" @blur="inputFocusOut"
+                    @keyup="inputKeyUp" class="flex-1 w-full h-full bg-transparent p-4 m-0 font-mono whitespace-nowrap"
+                    id="calc-input-field" />
             </div>
 
             <!-- Calculator Buttons Grid -->

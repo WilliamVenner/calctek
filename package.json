@@ -5,7 +5,7 @@
         "build": "vite build",
         "test": "npm run test:backend && npm run test:frontend",
         "test:backend": "vite build && php artisan test",
-        "test:frontend": "start-server-and-test 'php artisan serve --no-interaction --port 8000 --host 127.0.0.1' 8000 'cypress run'"
+        "test:frontend": "vite build && start-server-and-test 'php artisan serve --no-interaction --port 8000 --host 127.0.0.1' 8000 'cypress run'"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",
